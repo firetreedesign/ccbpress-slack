@@ -28,15 +28,15 @@ class CCBPress_Slack_REST_API {
 	    ) );
 
 	}
-	
+
 	public function slash_commands( WP_REST_Request $request ) {
-		
+
 		$slack_options = get_option( 'ccbpress_slack', array() );
 		$slack_token = false;
 		if ( isset( $slack_options['token'] ) ) {
 			$slack_token = $slack_options['token'];
 		}
-		
+
 		if ( ! $slack_token || $request->get_param('token') != $slack_token ) {
 			return array(
 				"response_type"	=> "ephemeral",
@@ -48,21 +48,21 @@ class CCBPress_Slack_REST_API {
 				)
 			);
 		}
-	    
+
 		$text = trim( $request->get_param('text') );
 		$space = strpos( $text, " ");
-		
+
 		if ( $space ) {
 			$command = substr( $text, 0, $space );
 		} else {
 			$command = $text;
 		}
 		$command = strtolower( $command );
-		
+
 		if ( $space ) {
 			$arg = substr( $text, $space, strlen( $text ) );
 		}
-		
+
 		switch ( $command ) {
 			case "help":
 				$response = $this->command_help();
@@ -82,11 +82,11 @@ class CCBPress_Slack_REST_API {
 				);
 				break;
 		}
-		
+
 		return $response;
-	    
+
 	}
-	
+
 	private function command_help() {
 		return array(
 			"response_type" => "ephemeral",
@@ -99,9 +99,9 @@ class CCBPress_Slack_REST_API {
 			)
 		);
 	}
-	
+
 	private function command_whois( $name ) {
-		
+
 		$parts = explode( " ", trim( $name ) );
 		$first_name = $parts[0];
 		if ( $first_name == "*" ) {
@@ -111,39 +111,39 @@ class CCBPress_Slack_REST_API {
 		if ( count( $parts ) > 1 ) {
 			$last_name = $parts[1];
 		}
-		
+
 		// Setup our connection to CCB
 		$ccb = new CCBPress_Slack_CCB_Connection();
 		// Retrive the event profile
-		$ccb_data = $ccb->individual_search( array( 
-			'first_name'	=> $first_name, 
+		$ccb_data = $ccb->individual_search( array(
+			'first_name'	=> $first_name,
 			'last_name'		=> $last_name,
-			'max_results'	=> 20 
+			'max_results'	=> 20
 		) );
 
 		// Check if the data is valid
 		if ( $ccb_data ) {
-			
+
 			$count = $ccb_data->response->individuals['count'];
-			
+
 			if ( '0' == $count ) {
-				
+
 				return array(
 					"response_type"	=> "ephemeral",
 					"text"			=> "Nobody found"
 				);
-				
+
 			}
-			
+
 			$what = "person";
 			if ( (int)$count > 1 ) {
 				$what = "people";
 			}
-			
+
 			$attachments = array();
-			
+
 			foreach( $ccb_data->response->individuals->individual as $individual ) {
-				
+
 				$individual_full_name = $individual->full_name;
 				$individual_phone = "Not available";
 				if ( isset( $individual->phones->phone[0] ) && strlen( $individual->phones->phone[0] ) > 0 ) {
@@ -165,7 +165,7 @@ class CCBPress_Slack_REST_API {
 						$individual_address .= ", " . $line_2;
 					}
 				}
-				
+
 				$person = array(
 					"title" => (string)$individual_full_name,
 					"color" => "good",
@@ -187,24 +187,24 @@ class CCBPress_Slack_REST_API {
 						)
 					)
 				);
-				
+
 				$attachments[] = $person;
-				
+
 			}
-			
+
 			return array(
 				"response_type" => "ephemeral",
 				"text" => "Found " . $count . " " . $what,
 				"attachments" => $attachments
 			);
-			
+
 		} else {
 			return array(
 					"response_type"	=> "ephemeral",
 					"text"			=> "There was an error"
 				);
 		}
-		
+
 	}
 
 }

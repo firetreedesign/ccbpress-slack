@@ -166,8 +166,13 @@ class CCBPress_Slack_REST_API {
 					}
 				}
 
+				$person_link = (string)CCBPress()->ccb->api_url;
+				$person_link = str_replace( 'api.php', 'individual_detail.php', $person_link );
+				$person_link = add_query_arg( 'individual_id', (string)$individual['id'], $person_link );
+
 				$person = array(
 					"title" => (string)$individual_full_name,
+					"title_link" => $person_link,
 					"color" => "good",
 					"fields" => array(
 						array(
@@ -183,10 +188,19 @@ class CCBPress_Slack_REST_API {
 						array(
 							"title"	=> "Address",
 							"value"	=> (string)$individual_address,
-							"short"	=> false
+							"short"	=> true
+						),
+						array(
+							"title"	=> "Birthday",
+							"value"	=> (string)date('M jS, Y', strtotime( $individual->birthday ) ),
+							"short"	=> true
 						)
 					)
 				);
+
+				if ( 'Not Available' != $individual_address ) {
+					$person['text'] = '<' . 'http://maps.google.com/?q=' . urlencode( $individual_address ) . '|Open address on Google Maps>';
+				}
 
 				$attachments[] = $person;
 

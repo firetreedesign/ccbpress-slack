@@ -199,7 +199,7 @@ class CCBPress_Slack_REST_API {
 				);
 
 				if ( 'Not Available' != $individual_address ) {
-					$person['text'] = '<' . 'http://maps.google.com/?q=' . urlencode( $individual_address ) . '|Open address on Google Maps>';
+					$person['text'] = '<' . 'http://maps.google.com/?q=' . urlencode( $individual_address ) . '|Open address in Google Maps>';
 				}
 
 				$attachments[] = $person;

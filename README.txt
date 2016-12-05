@@ -6,26 +6,25 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Import people from Church Community Builder into MailChimp lists.
+Lookup data from Church Community Builder while in Slack.
 
 == Description ==
 
-__MailChimp for CCBPress__ allows you to import group participants or event
-guests into selected MailChimp lists.
+__Slack for CCBPress__ allows you to lookup data from Church Community Builder while inside of Slack.
 
 == Installation ==
 
 = Using The WordPress Dashboard =
 
 1. Navigate to the 'Add New' Plugin Dashboard
-2. Select 'ccbpress-mailchimp.zip' from your computer
+2. Select 'ccbpress-slack.zip' from your computer
 3. Upload
 4. Activate the plugin on the WordPress Plugin Dashboard
 
 = Using FTP =
 
-1. Extract 'ccbpress-mailchimp.zip' to your computer
-2. Upload the contents of the 'ccbpress-mailchimp' directory to your 'wp-content/plugins/ccbpress-mailchimp' directory
+1. Extract 'ccbpress-slack.zip' to your computer
+2. Upload the contents of the 'ccbpress-mailchimp' directory to your 'wp-content/plugins/ccbpress-slack' directory
 3. Activate the plugin on the WordPress Plugin Dashboard
 
 == Changelog ==
